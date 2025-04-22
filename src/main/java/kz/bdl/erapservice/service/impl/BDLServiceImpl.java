@@ -1,0 +1,69 @@
+package kz.bdl.erapservice.service.impl;
+
+import kz.bdl.erapservice.entity.Camera;
+import kz.bdl.erapservice.entity.CameraViolation;
+import kz.bdl.erapservice.entity.SentViolations;
+import kz.bdl.erapservice.entity.Violation;
+import kz.bdl.erapservice.repository.CameraRepository;
+import kz.bdl.erapservice.repository.CameraViolationRepository;
+import kz.bdl.erapservice.repository.SentViolationsRepository;
+import kz.bdl.erapservice.repository.ViolationRepository;
+import kz.bdl.erapservice.service.BDLService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BDLServiceImpl implements BDLService {
+    @Autowired
+    private CameraRepository cameraRepository;
+    @Autowired
+    private ViolationRepository violationRepository;
+    @Autowired
+    private CameraViolationRepository cameraViolationRepository;
+    @Autowired
+    private SentViolationsRepository sentViolationsRepository;
+
+    @Override
+    public Camera getCameraByCode(String code) {
+        List<Camera> cameras = cameraRepository.findByCode(code);
+        if (cameras.size() > 0) {
+            return cameras.get(0);
+        }
+
+        cameras = cameraRepository.findByIp(code);
+        if (cameras.size() > 0) {
+            return cameras.get(0);
+        }
+
+        cameras = cameraRepository.findByName(code);
+        if (cameras.size() > 0) {
+            return cameras.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Violation getViolationByOperCode(String operCode) {
+        return violationRepository.getViolationByOperCode(operCode);
+    }
+
+    @Override
+    public Violation getViolationByHikCode(String hikCode) {
+        return violationRepository.getViolationByHikCode(hikCode);
+    }
+
+    @Override
+    public CameraViolation getCameraViolationByCameraAndViolation(Camera camera, Violation violation) {
+        return cameraViolationRepository.getCameraViolationByCameraAndViolation(camera, violation);
+    }
+
+    @Override
+    public ResponseEntity<String> addSentViolation(SentViolations sentViolations) {
+        sentViolationsRepository.save(sentViolations);
+        return ResponseEntity.ok("Sent Violation added successfully");
+    }
+}

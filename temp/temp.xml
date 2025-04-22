@@ -1,0 +1,37 @@
+<erapViolation>
+    <service_id>c30c35ec-19e8-4703-997f-d5318636dac4</service_id>
+    <client_id>126e48df-3876-4c13-b2a1-65c4c2ec4f26</client_id>
+    <message_id>bf68efcc-de31-4b17-ace8-81246c6d9b53</message_id>
+    <send_at>2025-01-24T13:38:48</send_at>
+    <plate_number>777TAU16</plate_number>
+    <violation_code>red_light</violation_code>
+    <speed>40</speed>
+    <delta_speed>2</delta_speed>
+    <speed_limit>60</speed_limit>
+    <road_lane>2</road_lane>
+    <location_id>e91923bd541e4f0e99414b48955b28f8</location_id>
+    <location_title>LU-49</location_title>
+    <district_code>196310</district_code>
+    <source>182</source>
+    <device_number>hiktest</device_number>
+    <certificate_number>IIN771024302514</certificate_number>
+    <certificate_issue_date>2024-06-06T12:28:54</certificate_issue_date>
+    <certificate_expire_date>2025-06-06T12:28:54</certificate_expire_date>
+    <event_time>2024-09-13T10:00:00</event_time>
+    <plate_frame>
+        <content>/9j/</content>
+        <ext>jpg</ext>
+    </plate_frame>
+    <car_frame>
+        <content>/9j/</content>
+        <ext>jpg</ext>
+    </car_frame>
+    <frame>
+        <content>/9j/</content>
+        <ext>jpg</ext>
+    </frame>
+    <video_frame>
+        <content>AAAA</content>
+        <ext>mp4</ext>
+    </video_frame>
+</erapViolation>

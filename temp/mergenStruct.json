@@ -1,0 +1,100 @@
+{
+  "sendTime": "2024-04-02T12:00:00Z",
+  "picUploadInterval": "10s",
+  "channelID": 1,
+  "channelName": "Канал 1",
+  "dataType": "alarm",
+  "dateTime": "2024-04-02T11:59:50Z",
+  "eventDescription": "Обнаружен автомобиль",
+  "eventType": "vehicleDetection",
+  "ipAddress": "192.168.1.10",
+  "portNo": 8080,
+  "recvTime": "2024-04-02T12:00:01Z",
+  "vehicleAlarmResult": [
+    {
+      "target": [
+        {
+          "rect": {
+            "height": 100.5,
+            "width": 200.0,
+            "x": 50.0,
+            "y": 60.0
+          },
+          "vehicle": {
+            "dangmark": { "value": "нет" },
+            "envprosign": { "value": "экологический класс 4" },
+            "isMainVehicle": "true",
+            "pendant": { "value": "флаг" },
+            "pilotSafebelt": { "value": "пристегнут" },
+            "pilotSunvisor": { "value": "опущен" },
+            "plateColor": { "value": "белый" },
+            "plateNo": {
+              "confidence": 0.98,
+              "value": "A123BC01"
+            },
+            "plateRect": {
+              "height": 15.0,
+              "width": 35.0,
+              "x": 100.0,
+              "y": 120.0
+            },
+            "plateType": { "value": "легковой" },
+            "uphone": { "value": "нет" },
+            "vehicleColor": { "value": "синий" },
+            "vehicleHead": { "value": "вперед" },
+            "vehicleLogo": { "value": "Toyota" },
+            "vehicleModel": { "value": "Camry" },
+            "vehicleSubLogo": { "value": "XV70" },
+            "vehicleType": { "value": "седан" },
+            "vicePilotSafebelt": { "value": "непристегнут" },
+            "vicePilotSunvisor": { "value": "поднят" }
+          }
+        }
+      ],
+      "targetAttrs": {
+        "IACPicUp": "http://image-server/img123.jpg",
+        "alarmId": "ALARM123",
+        "alarmType": "speeding",
+        "areaCode": "KZ-001",
+        "cameraAddress": "ул. Абая, 15",
+        "cameraIndexCode": "CAM001",
+        "cameraName": "Камера 1",
+        "cameraType": "fixed",
+        "cascade": "yes",
+        "crossingExternalCode": "EXT001",
+        "crossingId": 101,
+        "crossingIndexCode": "CRS101",
+        "crossingName": "Перекресток 1",
+        "deviceIndexCode": "DEV001",
+        "deviceLatitude": "43.238949",
+        "deviceLongitude": "76.889709",
+        "deviceName": "Датчик №1",
+        "deviceType": "roadSensor",
+        "directionIndex": "на север",
+        "imageServerCode": "IS001",
+        "laneNo": 2,
+        "passID": "PASS123",
+        "passTime": "2024-04-02T11:59:45Z",
+        "platePicUrl": "http://image-server/plate.jpg",
+        "recognitionSign": 1,
+        "regionIndexCode": "RGN001",
+        "uuid": "uuid-1234-5678",
+        "vehicleBackgroundImageResolution": {
+          "height": 1080,
+          "width": 1920
+        },
+        "vehicleColorDepth": "24bit",
+        "vehicleLen": 450,
+        "vehiclePicNum": 3,
+        "vehiclePicUrl1": "http://image-server/vehicle1.jpg",
+        "vehiclePicUrl2": "http://image-server/vehicle2.jpg",
+        "vehiclePicUrl3": "http://image-server/vehicle3.jpg",
+        "vehicleSpeed": 72,
+        "xmlBuf": "<vehicle><speed>72</speed></vehicle>",
+        "vehicleVideoUrl": "http://video-server/video.mp4"
+      },
+      "targetPicUrl": "http://image-server/target.jpg",
+      "taskID": "TASK001"
+    }
+  ]
+}

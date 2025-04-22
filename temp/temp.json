@@ -1,0 +1,105 @@
+{
+  "SendTime": "2025-03-03T12:08:28.910255691Z",
+  "PicUploadInterval": "1",
+  "ChannelID": 1,
+  "ChannelName": "P.093.VAR4 (ул. Энтузиастов - ул. Молдагуловой). По направлению:  от ул. Мухаметжановой, в сторону ул. Молдагуловой",
+  "DataType": "vehicleAlarm",
+  "DateTime": "2025-02-28T07:02:47Z",
+  "EventDescription": "vehicleAlarmResult",
+  "EventType": "vehicleAlarmResult",
+  "IPAddress": "10.235.11.133",
+  "PortNo": 8000,
+  "RecvTime": "2025-03-03T12:08:28.910256006Z",
+  "VehicleAlarmResult": [
+    {
+      "Target": [
+        {
+          "Rect": {
+            "Height": 0.1,
+            "Width": 0.1,
+            "X": 0.1,
+            "Y": 0.1
+          },
+          "Vehicle": {
+            "Dangmark": {
+              "Value": "unknown"
+            },
+            "Envprosign": {
+              "Value": "unknown"
+            },
+            "IsMainVehicle": "true",
+            "Pendant": {
+              "Value": "unknown"
+            },
+            "PilotSafebelt": {
+              "Value": "unknown"
+            },
+            "PilotSunvisor": {
+              "Value": "unknown"
+            },
+            "PlateColor": {
+              "Value": "other"
+            },
+            "PlateNo": {
+              "Confidence": 1,
+              "Value": "326agx16"
+            },
+            "PlateRect": {
+              "Height": 0.2,
+              "Width": 0.2,
+              "X": 0.2,
+              "Y": 0.2
+            },
+            "PlateType": {
+              "Value": "unknown"
+            },
+            "Uphone": {
+              "Value": "unknown"
+            },
+            "VehicleColor": {
+              "Value": "unknown"
+            },
+            "VehicleHead": {
+              "Value": "unknown"
+            },
+            "VehicleLogo": {
+              "Value": "0"
+            },
+            "VehicleModel": {
+              "Value": "0"
+            },
+            "VehicleSubLogo": {
+              "Value": "0"
+            },
+            "VehicleType": {
+              "Value": "vehicle"
+            },
+            "VicePilotSafebelt": {
+              "Value": "unknown"
+            },
+            "VicePilotSunvisor": {
+              "Value": "unknown"
+            }
+          }
+        }
+      ],
+      "TargetAttrs": {
+        "AlarmType": "1350",
+        "CameraAddress": "Металлург, улица Энтузиастов",
+        "CameraName": "Металлург, улица Энтузиастов",
+        "DeviceLatitude": "49.893370",
+        "DeviceLongitude": "82.654610",
+        "DeviceName": "P.093.VAR4 (ул. Энтузиастов - ул. Молдагуловой). По направлению:  от ул. Мухаметжановой, в сторону ул. Молдагуловой",
+        "PassTime": "2025-02-28T07:02:47Z",
+        "PlatePicURL": "https://10.141.0.100/tvdms/2025-03-03/pic/041432a7-2130-42d0-923b-8fa10c83a09fSnipaste_2025-02-21_14-14-06.jpg",
+        "VehiclePicURL1": "https://10.141.0.100/tvdms/2025-03-03/pic/e78ab9f1-d180-4473-a0f7-1a12ac19393cSnipaste_2025-02-21_14-14-06.jpg",
+        "VehiclePicURL2": "https://10.141.0.100/tvdms/2025-03-03/pic/48a6fdb9-aead-4ae0-834a-2977c79be741Snipaste_2025-02-21_14-22-40.jpg",
+        "VehiclePicURL3": "https://10.141.0.100/tvdms/2025-03-03/pic/1e48f611-ff99-462f-ac89-e9b47c76bdcdSnipaste_2025-02-21_14-22-59.jpg",
+        "VehicleSpeed": 300,
+        "VehicleVideoUrl": "https://10.141.0.100/tvdms/2025-03-03/video/2297cc96-e698-43fe-95fd-eea27d341834output.mp4"
+      },
+      "TargetPicURL": "https://10.141.0.100/tvdms/2025-03-03/pic/041432a7-2130-42d0-923b-8fa10c83a09fSnipaste_2025-02-21_14-14-06.jpg",
+      "TaskID": "1"
+    }
+  ]
+}

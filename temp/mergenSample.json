@@ -1,0 +1,100 @@
+{
+  "sendTime": "2025-03-19T07:38:27.393Z",
+  "picUploadInterval": "1",
+  "channelID": 3071,
+  "channelName": "P.093.VAR3 (ул. Энтузиастов - ул. Молдагуловой). По направлению:  от ул. Б. Момышулы, в сторону ул. Энтузиастов",
+  "dataType": "vehicleAlarm",
+  "dateTime": "2025-03-19T07:38:27.393Z",
+  "eventDescription": "vehicleAlarmResult",
+  "eventType": "vehicleAlarmResult",
+  "ipAddress": "10.235.11.132",
+  "portNo": 8000,
+  "recvTime": "2025-03-19T07:38:27.393Z",
+  "vehicleAlarmResult": [
+    {
+      "target": [
+        {
+          "rect": {
+            "height": 0.1,
+            "width": 0.1,
+            "x": 0.1,
+            "y": 0.1
+          },
+          "vehicle": {
+            "dangmark": { "value": "unknown" },
+            "envprosign": { "value": "unknown" },
+            "isMainVehicle": "true",
+            "pendant": { "value": "unknown" },
+            "pilotSafebelt": { "value": "unknown" },
+            "pilotSunvisor": { "value": "unknown" },
+            "plateColor": { "value": "other" },
+            "plateNo": {
+              "confidence": 1,
+              "value": "257arv01"
+            },
+            "plateRect": {
+              "height": 0.2,
+              "width": 0.2,
+              "x": 0.2,
+              "y": 0.2
+            },
+            "plateType": { "value": "unknown" },
+            "uphone": { "value": "unknown" },
+            "vehicleColor": { "value": "unknown" },
+            "vehicleHead": { "value": "unknown" },
+            "vehicleLogo": { "value": "0" },
+            "vehicleModel": { "value": "0" },
+            "vehicleSubLogo": { "value": "0" },
+            "vehicleType": { "value": "vehicle" },
+            "vicePilotSafebelt": { "value": "unknown" },
+            "vicePilotSunvisor": { "value": "unknown" }
+          }
+        }
+      ],
+      "targetAttrs": {
+        "IACPicUp": "unknown",
+        "alarmId": "",
+        "alarmType": "1350",
+        "areaCode": "unknown",
+        "cameraAddress": "Металлург, улица Энтузиастов",
+        "cameraIndexCode": "unknown",
+        "cameraName": "unknown",
+        "cameraType": "COMMON",
+        "cascade": "0",
+        "crossingExternalCode": "unknown",
+        "crossingId": 1,
+        "crossingIndexCode": "1",
+        "crossingName": "Металлург, улица Энтузиастов",
+        "deviceIndexCode": "unknown",
+        "deviceLatitude": "49.893563106716535",
+        "deviceLongitude": "82.65471172551896",
+        "deviceName": "P.093.VAR3 (ул. Энтузиастов - ул. Молдагуловой). По направлению:  от ул. Б. Момышулы, в сторону ул. Энтузиастов",
+        "deviceType": "100001",
+        "directionIndex": "1",
+        "imageServerCode": "1",
+        "laneNo": 1,
+        "passID": "unknown",	
+        "passTime": "2025-03-19T07:38:27.393Z",
+        "platePicUrl": "https://10.141.0.100/tvdms/2025-04-03/pic/ae6f8998-fe4e-4cf8-9109-17e4cd355bcaresponse.jpeg",
+        "recognitionSign": 1,
+        "regionIndexCode": "unknown",
+        "uuid": "1",
+        "vehicleBackgroundImageResolution": {
+          "height": 1080,
+          "width": 1920
+        },
+        "vehicleColorDepth": "0",
+        "vehicleLen": 0,
+        "vehiclePicNum": 3,
+        "vehiclePicUrl1": "https://10.141.0.100/tvdms/2025-04-03/pic/a4a4ef5e-34bd-4c90-9087-e08df926df5fresponse.jpeg",
+        "vehiclePicUrl2": "https://10.141.0.100/tvdms/2025-04-03/pic/213aecf8-b6b1-4a20-8468-9ca24f4ae900response.jpeg",
+        "vehiclePicUrl3": "unknown",
+        "vehicleVideoUrl": "event.VideoPath",
+        "vehicleSpeed": 80,
+        "xmlBuf": ""
+      },
+      "targetPicUrl": "https://10.141.0.100/tvdms/2025-04-03/pic/a4a4ef5e-34bd-4c90-9087-e08df926df5fresponse.jpeg",
+      "taskID": "1"
+    }
+  ]
+}
