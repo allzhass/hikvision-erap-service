@@ -3,6 +3,7 @@ package kz.bdl.erapservice.dto.erap;
 import jakarta.xml.bind.Element;
 import jakarta.xml.bind.annotation.*;
 import kz.bdl.erapservice.dto.FrameData;
+import kz.bdl.erapservice.entity.APK;
 import kz.bdl.erapservice.entity.Camera;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,17 +21,17 @@ import static kz.bdl.erapservice.dto.Constants.DATE_TIME_FORMATTER;
 @XmlRootElement(name = "violation")
 public class ErapViolation {
 
-    public void enrich(Camera camera) {
-        this.serviceId = camera.getApk().getLocation().getRegion().getVshepData().getServiceId();
-        this.clientId = camera.getApk().getLocation().getRegion().getVshepData().getClientId();
+    public void enrich(APK apk) {
+        this.serviceId = apk.getLocation().getRegion().getVshepData().getServiceId();
+        this.clientId = apk.getLocation().getRegion().getVshepData().getClientId();
         this.messageId = UUID.randomUUID().toString();
         this.sendAt = LocalDateTime.now().format(DATE_TIME_FORMATTER);
-        this.districtCode = camera.getApk().getLocation().getRegion().getCode();
-        this.source = camera.getApk().getLocation().getRegion().getVshepData().getSource();
-        this.deviceNumber = camera.getApk().getDeviceNumber();
-        this.certificateNumber = camera.getApk().getCertNumber();
-        this.certificateIssueDate = camera.getApk().getCertIssue().format(DATE_TIME_FORMATTER);
-        this.certificateExpireDate = camera.getApk().getCertExpiry().format(DATE_TIME_FORMATTER);
+        this.districtCode = apk.getLocation().getRegion().getCode();
+        this.source = apk.getLocation().getRegion().getVshepData().getSource();
+        this.deviceNumber = apk.getDeviceNumber();
+        this.certificateNumber = apk.getCertNumber();
+        this.certificateIssueDate = apk.getCertIssue().format(DATE_TIME_FORMATTER);
+        this.certificateExpireDate = apk.getCertExpiry().format(DATE_TIME_FORMATTER);
     }
 
     public ErapViolation(String serviceId, String clientId, String messageId, LocalDateTime sendAt, String plateNumber, String violationCode, Integer speed, Integer deltaSpeed, Integer speedLimit, Integer roadLane, String locationId, String locationTitle, String districtCode, String source, String deviceNumber, String certificateNumber, LocalDateTime certificateIssueDate, LocalDateTime certificateExpireDate, LocalDateTime eventTime, FrameData plateFrame, FrameData carFrame, FrameData frame, FrameData videoFrame) {

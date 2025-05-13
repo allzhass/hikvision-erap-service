@@ -1,12 +1,13 @@
 package kz.bdl.erapservice.service;
 
-import kz.bdl.erapservice.entity.Camera;
-import kz.bdl.erapservice.entity.CameraViolation;
-import kz.bdl.erapservice.entity.SentViolations;
-import kz.bdl.erapservice.entity.Violation;
+import kz.bdl.erapservice.entity.*;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface BDLService {
+    APK getApkByDeviceNumber(String deviceNumber);
+    List<Camera> getCamerasByApk(APK apk);
     Camera getCameraByCode(String code);
     Violation getViolationByOperCode(String operCode);
     Violation getViolationByHikCode(String hikCode);

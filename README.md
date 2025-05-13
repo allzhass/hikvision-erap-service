@@ -81,7 +81,7 @@ Or using Docker:
 
 ```bash
 docker build -t erap-service .
-docker run -p 8080:8080 erap-service
+docker run -d --name erap-service-0.0.3 --restart always --network bdl_network -e SPRING_DATASOURCE_URL=jdbc:postgresql://bdl_postgres:5432/bdl_db -e SPRING_DATASOURCE_USERNAME=bdlpostgres -e SPRING_DATASOURCE_PASSWORD=bdlpassword -e SERVICE_SMARTBRIDGE_NAME=smart-bridge-service -e SERVICE_SMARTBRIDGE_HOST=http://smart-bridge-service:8081/vshep/v1 -p 8080:8080 erap-service:0.0.3
 ```
 
 ## API Documentation

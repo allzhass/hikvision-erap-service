@@ -32,13 +32,7 @@ public class ViolationServiceImpl implements ViolationService {
     private SmartBridgeServiceClient smartBridgeServiceClient;
 
     @Override
-    public CameraViolation checkViolation(String cameraCode, String violationCode, SentViolations sentViolations) {
-        Camera camera = bdlService.getCameraByCode(cameraCode);
-        if (camera == null) {
-            throw new ResourceBadRequestException(String.format(
-                    "Unknown camera: code: %s", cameraCode));
-        }
-
+    public CameraViolation checkViolation(Camera camera, String violationCode, SentViolations sentViolations) {
         Violation violation;
         if (Constants.BRAND_OPER.equals(camera.getBrand())) {
             violation = bdlService.getViolationByOperCode(violationCode);
@@ -65,6 +59,17 @@ public class ViolationServiceImpl implements ViolationService {
     }
 
     @Override
+    public CameraViolation checkViolationByCode(String cameraCode, String violationCode, SentViolations sentViolations) {
+        Camera camera = bdlService.getCameraByCode(cameraCode);
+        if (camera == null) {
+            throw new ResourceBadRequestException(String.format(
+                    "Unknown camera: code: %s", cameraCode));
+        }
+
+        return checkViolation(camera, violationCode, sentViolations);
+    }
+
+    @Override
     public String sendViolation(ErapViolation erapViolation, SentViolations sentViolations) {
         String violationXml = ViolationMapper.toXmlString(erapViolation);
         String signedViolationXml = signService.signXml(violationXml);
@@ -88,8 +93,6 @@ public class ViolationServiceImpl implements ViolationService {
         log.info("Sending violation resp: {}", vshepResult);
 
         sentViolations.setResponse(vshepResult);
-        sentViolations.setCreatedAt(LocalDateTime.now());
-        bdlService.addSentViolation(sentViolations);
         log.info("Saving request: {}", sentViolations.getRequest());
         log.info("Saving response: {}", sentViolations.getResponse());
 

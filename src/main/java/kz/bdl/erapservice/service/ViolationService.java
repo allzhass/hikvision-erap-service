@@ -7,6 +7,7 @@ import kz.bdl.erapservice.entity.CameraViolation;
 import kz.bdl.erapservice.entity.SentViolations;
 
 public interface ViolationService {
-    CameraViolation checkViolation(String cameraCode, String violationCode, SentViolations sentViolations);
+    CameraViolation checkViolation(Camera camera, String violationCode, SentViolations sentViolations);
+    CameraViolation checkViolationByCode(String cameraCode, String violationCode, SentViolations sentViolations);
     String sendViolation(ErapViolation erapViolation, SentViolations sentViolations);
 }

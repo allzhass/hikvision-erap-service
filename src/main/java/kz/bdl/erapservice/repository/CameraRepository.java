@@ -1,5 +1,6 @@
 package kz.bdl.erapservice.repository;
 
+import kz.bdl.erapservice.entity.APK;
 import kz.bdl.erapservice.entity.Camera;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,6 @@ public interface CameraRepository extends JpaRepository<Camera, Long> {
     List<Camera> findByCode(String code);
     List<Camera> findByIp(String ip);
     List<Camera> findByName(String name);
+
+    List<Camera> findByApk(APK apk);
 }

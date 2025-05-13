@@ -1,13 +1,7 @@
 package kz.bdl.erapservice.service.impl;
 
-import kz.bdl.erapservice.entity.Camera;
-import kz.bdl.erapservice.entity.CameraViolation;
-import kz.bdl.erapservice.entity.SentViolations;
-import kz.bdl.erapservice.entity.Violation;
-import kz.bdl.erapservice.repository.CameraRepository;
-import kz.bdl.erapservice.repository.CameraViolationRepository;
-import kz.bdl.erapservice.repository.SentViolationsRepository;
-import kz.bdl.erapservice.repository.ViolationRepository;
+import kz.bdl.erapservice.entity.*;
+import kz.bdl.erapservice.repository.*;
 import kz.bdl.erapservice.service.BDLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +13,8 @@ import java.util.List;
 public class BDLServiceImpl implements BDLService {
     @Autowired
     private CameraRepository cameraRepository;
+    @Autowired
+    private APKRepository apkRepository;
     @Autowired
     private ViolationRepository violationRepository;
     @Autowired
@@ -41,6 +37,26 @@ public class BDLServiceImpl implements BDLService {
         cameras = cameraRepository.findByName(code);
         if (cameras.size() > 0) {
             return cameras.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
+    public APK getApkByDeviceNumber(String deviceNumber) {
+        List<APK> apk = apkRepository.getAPKByDeviceNumber(deviceNumber);
+        if (apk.size() > 0) {
+            return apk.get(0);
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Camera> getCamerasByApk(APK apk) {
+        List<Camera> cameras = cameraRepository.findByApk(apk);
+        if (cameras.size() > 0) {
+            return cameras;
         }
 
         return null;
