@@ -29,5 +29,6 @@ public class SentViolations {
     @Column(columnDefinition = "TEXT")
     private String response;
 
+    private Boolean isError;
     private LocalDateTime createdAt;
 }

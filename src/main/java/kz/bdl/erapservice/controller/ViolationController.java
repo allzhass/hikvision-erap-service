@@ -174,6 +174,7 @@ public class ViolationController {
             try {
                 if (VshepStatus.OK.equals(
                         envelopeResponse.getBody().getSendMessageResponse().getResponse().getResponseInfo().getStatus().getCode())) {
+                    sentViolations.setIsError(false);
                     return ResponseEntity.ok(resultString);
                 } else {
                     throw new ResourceInternalException(String.format("Internal error: %s", resultString));
@@ -183,6 +184,7 @@ public class ViolationController {
             }
         } catch (RuntimeException e) {
             sentViolations.setResponse(e.getMessage());
+            sentViolations.setIsError(true);
         } finally {
             sentViolations.setCreatedAt(LocalDateTime.now());
             log.info("Saving request: {}", sentViolations);

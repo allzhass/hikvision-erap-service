@@ -14,14 +14,10 @@ import kz.bdl.erapservice.mapper.VshepMapper;
 import kz.bdl.erapservice.service.BDLService;
 import kz.bdl.erapservice.service.SignService;
 import kz.bdl.erapservice.service.ViolationService;
-import kz.bdl.erapservice.util.Compressor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 @Slf4j
 @Service
