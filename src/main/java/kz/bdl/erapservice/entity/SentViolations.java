@@ -31,4 +31,6 @@ public class SentViolations {
 
     private Boolean isError;
     private LocalDateTime createdAt;
+    private String plateNumber;
+    private String messageId;
 }

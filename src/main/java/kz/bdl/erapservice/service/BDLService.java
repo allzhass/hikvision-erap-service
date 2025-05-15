@@ -12,5 +12,7 @@ public interface BDLService {
     Violation getViolationByOperCode(String operCode);
     Violation getViolationByHikCode(String hikCode);
     CameraViolation getCameraViolationByCameraAndViolation(Camera camera, Violation violation);
-    ResponseEntity<String> addSentViolation(SentViolations sentViolations);
+    List<SentViolations> getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
+            String deviceNumber, String plateNumber, String messageId);
+    ResponseEntity<String> updateSentViolation(SentViolations sentViolations);
 }

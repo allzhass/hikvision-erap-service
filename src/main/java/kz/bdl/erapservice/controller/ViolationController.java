@@ -158,6 +158,8 @@ public class ViolationController {
             List<Camera> cameras = bdlService.getCamerasByApk(apk);
             Camera camera = getCamera(cameras, erapViolation);
 
+            sentViolations.setPlateNumber(erapViolation.getPlateNumber());
+            sentViolations.setMessageId(erapViolation.getMessageId());
             violationService.checkViolation(camera, erapViolation.getViolationCode(), sentViolations);
 
             erapViolation.enrich(apk);
@@ -188,7 +190,7 @@ public class ViolationController {
         } finally {
             sentViolations.setCreatedAt(LocalDateTime.now());
             log.info("Saving request: {}", sentViolations);
-            bdlService.addSentViolation(sentViolations);
+            bdlService.updateSentViolation(sentViolations);
         }
         return ResponseEntity.ok(sentViolations.getResponse());
     }

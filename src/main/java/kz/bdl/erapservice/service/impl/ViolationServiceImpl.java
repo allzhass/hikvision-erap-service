@@ -8,6 +8,7 @@ import kz.bdl.erapservice.entity.CameraViolation;
 import kz.bdl.erapservice.entity.SentViolations;
 import kz.bdl.erapservice.entity.Violation;
 import kz.bdl.erapservice.exception.ResourceBadRequestException;
+import kz.bdl.erapservice.exception.ResourceSuccessException;
 import kz.bdl.erapservice.external.SmartBridgeServiceClient;
 import kz.bdl.erapservice.mapper.ViolationMapper;
 import kz.bdl.erapservice.mapper.VshepMapper;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -51,6 +53,22 @@ public class ViolationServiceImpl implements ViolationService {
         }
 
         sentViolations.setCameraViolation(cameraViolation);
+        List<SentViolations> sentViolationsList = bdlService.getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
+                sentViolations.getCameraViolation().getCamera().getApk().getDeviceNumber(),
+                sentViolations.getPlateNumber(),
+                sentViolations.getMessageId()
+        );
+        if (sentViolationsList.size() > 0) {
+            if (sentViolationsList.get(0).getIsError()) {
+                sentViolations.setId(sentViolationsList.get(0).getId());
+            } else {
+                throw new ResourceSuccessException(String.format(
+                        "There is already exist success row: deviceNumber: %s; plateNumber: %s; messageId: %s",
+                        sentViolationsList.get(0).getCameraViolation().getCamera().getApk().getDeviceNumber(),
+                        sentViolationsList.get(0).getPlateNumber(),
+                        sentViolationsList.get(0).getMessageId()));
+            }
+        }
         return cameraViolation;
     }
 

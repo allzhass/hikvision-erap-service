@@ -78,8 +78,15 @@ public class BDLServiceImpl implements BDLService {
     }
 
     @Override
-    public ResponseEntity<String> addSentViolation(SentViolations sentViolations) {
+    public List<SentViolations> getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
+            String deviceNumber, String plateNumber, String messageId) {
+        return sentViolationsRepository.findByDeviceNumberAndPlateNumberAndMessageId(
+                deviceNumber, plateNumber, messageId);
+    }
+
+    @Override
+    public ResponseEntity<String> updateSentViolation(SentViolations sentViolations) {
         sentViolationsRepository.save(sentViolations);
-        return ResponseEntity.ok("Sent Violation added successfully");
+        return ResponseEntity.ok("Sent Violation updated successfully");
     }
 }

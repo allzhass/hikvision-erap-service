@@ -24,8 +24,8 @@ public class ErapViolation {
     public void enrich(APK apk) {
         this.serviceId = apk.getLocation().getRegion().getVshepData().getServiceId();
         this.clientId = apk.getLocation().getRegion().getVshepData().getClientId();
-        this.messageId = UUID.randomUUID().toString();
-        this.sendAt = LocalDateTime.now().format(DATE_TIME_FORMATTER);
+//        this.messageId = UUID.randomUUID().toString();
+//        this.sendAt = LocalDateTime.now().format(DATE_TIME_FORMATTER);
         this.districtCode = apk.getLocation().getRegion().getCode();
         this.source = apk.getLocation().getRegion().getVshepData().getSource();
         this.deviceNumber = apk.getDeviceNumber();
