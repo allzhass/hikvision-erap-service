@@ -51,7 +51,11 @@ logging:
 services:
   smartbridge:
     name: ${SERVICE_SMARTBRIDGE_NAME:smart-bridge-service}
-    host: ${SERVICE_SMARTBRIDGE_HOST:http://localhost:8081/vshep/v1} # TEST: http://10.61.40.133/shep/bip-sync-wss-gost/
+    host: ${SERVICE_SMARTBRIDGE_HOST:http://localhost:8081/vshep/v1}
+  smartbridge-test:
+    name: ${SERVICE_SMARTBRIDGE_NAME:smart-bridge-service-test}
+    host: ${SERVICE_SMARTBRIDGE_HOST:http://localhost:8082/vshep/v1}
+
 
 signature:
   current-verify-alg: current.verify.alg # Gost2015_512

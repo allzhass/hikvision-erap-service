@@ -10,6 +10,7 @@ import kz.bdl.erapservice.entity.Violation;
 import kz.bdl.erapservice.exception.ResourceBadRequestException;
 import kz.bdl.erapservice.exception.ResourceSuccessException;
 import kz.bdl.erapservice.external.SmartBridgeServiceClient;
+import kz.bdl.erapservice.external.SmartBridgeServiceClientTest;
 import kz.bdl.erapservice.mapper.ViolationMapper;
 import kz.bdl.erapservice.mapper.VshepMapper;
 import kz.bdl.erapservice.service.BDLService;
@@ -28,6 +29,7 @@ public class ViolationServiceImpl implements ViolationService {
     private BDLService bdlService;
     private SignService signService;
     private SmartBridgeServiceClient smartBridgeServiceClient;
+    private SmartBridgeServiceClientTest smartBridgeServiceClientTest;
 
     @Override
     public CameraViolation checkViolation(Camera camera, String violationCode, SentViolations sentViolations) {
@@ -95,7 +97,11 @@ public class ViolationServiceImpl implements ViolationService {
         log.info("Sending violation: {}", soapString);
         String vshepResult;
         try {
-            vshepResult = smartBridgeServiceClient.sendMessage(soapString);
+            if (sentViolations.getCameraViolation().getIsProd()) {
+                vshepResult = smartBridgeServiceClient.sendMessage(soapString);
+            } else {
+                vshepResult = smartBridgeServiceClientTest.sendMessage(soapString);
+            }
         } catch (FeignException e) {
             log.error("Error while sending violation to SmartBridge: {}. Response Body: {}", e.getMessage(), e.responseBody());
             e.printStackTrace();
