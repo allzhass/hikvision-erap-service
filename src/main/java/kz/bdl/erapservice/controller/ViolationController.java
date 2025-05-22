@@ -129,9 +129,8 @@ public class ViolationController {
             String rawBody;
             try (BufferedReader reader = request.getReader()) {
                 rawBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
-                sentViolations.setRequest(rawBody);
             } catch (IOException e) {
-                log.error("Error of reading request body", e);
+                e.printStackTrace();
                 throw new ResourceBadRequestException(String.format(
                         "Error of reading request body: %s", e.getMessage()));
             }
@@ -142,6 +141,7 @@ public class ViolationController {
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
                 envelope = (Envelope) unmarshaller.unmarshal(new StringReader(rawBody));
             } catch (Exception e) {
+                sentViolations.setRequest(rawBody);
                 e.printStackTrace();
                 throw new ResourceBadRequestException(String.format(
                         "Error of unmarshalling request body: %s", e.getMessage()));
@@ -150,7 +150,6 @@ public class ViolationController {
             ErapViolation erapViolation = envelope.getBody().getSendMessage().getRequest().getRequestData().getData().getOnEventShep().getViolation();
             APK apk = bdlService.getApkByDeviceNumber(erapViolation.getDeviceNumber());
             if (apk == null) {
-                log.error("Unknown APK: number: {}", erapViolation.getDeviceNumber());
                 throw new ResourceBadRequestException(String.format(
                         "Unknown APK: number: %s", erapViolation.getDeviceNumber()));
             }
@@ -158,8 +157,8 @@ public class ViolationController {
             List<Camera> cameras = bdlService.getCamerasByApk(apk);
             Camera camera = getCamera(cameras, erapViolation);
 
-            sentViolations.setPlateNumber(erapViolation.getPlateNumber());
             sentViolations.setMessageId(erapViolation.getMessageId());
+            sentViolations.setPlateNumber(erapViolation.getPlateNumber());
             violationService.checkViolation(camera, erapViolation.getViolationCode(), sentViolations);
 
             erapViolation.enrich(apk);
@@ -187,12 +186,20 @@ public class ViolationController {
         } catch (RuntimeException e) {
             sentViolations.setResponse(e.getMessage());
             sentViolations.setIsError(true);
+
+            log.error("RuntimeException: MessageId={}; PlateNumber={}; Error={}",
+                    sentViolations.getMessageId(), sentViolations.getPlateNumber(), e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(e.getMessage());
         } finally {
             sentViolations.setCreatedAt(LocalDateTime.now());
-            log.info("Saving request: {}", sentViolations);
+            log.info("Saving request: MessageId={}; PateNumber={}; IsError={}; CameraViolation={}",
+                    sentViolations.getMessageId(),
+                    sentViolations.getPlateNumber(),
+                    sentViolations.getIsError(),
+                    sentViolations.getCameraViolation());
             bdlService.updateSentViolation(sentViolations);
         }
-        return ResponseEntity.ok(sentViolations.getResponse());
     }
 
     @NotNull

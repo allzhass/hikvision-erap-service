@@ -39,4 +39,7 @@ public class VshepData {
 
     @Column
     private String URL;
+
+    @Column
+    private String testUrl;
 }

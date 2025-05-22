@@ -6,6 +6,7 @@ import kz.bdl.erapservice.service.BDLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -78,6 +79,7 @@ public class BDLServiceImpl implements BDLService {
     }
 
     @Override
+    @Transactional
     public List<SentViolations> getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
             String deviceNumber, String plateNumber, String messageId) {
         return sentViolationsRepository.findByDeviceNumberAndPlateNumberAndMessageId(
@@ -85,6 +87,7 @@ public class BDLServiceImpl implements BDLService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<String> updateSentViolation(SentViolations sentViolations) {
         sentViolationsRepository.save(sentViolations);
         return ResponseEntity.ok("Sent Violation updated successfully");

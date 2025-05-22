@@ -34,6 +34,9 @@ logging:
     name: /app/logs/erap-service.log
   level:
     root: ${ROOT_LOGGING_LEVEL:INFO}
+    jdk:
+      internal:
+        httpclient: DEBUG
     kz:
       altyn:
         i:
@@ -53,9 +56,8 @@ services:
     name: ${SERVICE_SMARTBRIDGE_NAME:smart-bridge-service}
     host: ${SERVICE_SMARTBRIDGE_HOST:http://localhost:8081/vshep/v1}
   smartbridge-test:
-    name: ${SERVICE_SMARTBRIDGE_NAME:smart-bridge-service-test}
-    host: ${SERVICE_SMARTBRIDGE_HOST:http://localhost:8082/vshep/v1}
-
+    name: ${SERVICE_SMARTBRIDGE_NAME_TEST:smart-bridge-service-test}
+    host: ${SERVICE_SMARTBRIDGE_HOST_TEST:http://localhost:8082/vshep/v1}
 
 signature:
   current-verify-alg: current.verify.alg # Gost2015_512
