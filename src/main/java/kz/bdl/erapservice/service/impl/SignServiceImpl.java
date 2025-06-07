@@ -9,7 +9,6 @@ import org.apache.xml.security.encryption.XMLCipherParameters;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.transforms.Transforms;
 import org.apache.xml.security.transforms.params.InclusiveNamespaces;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,30 +21,22 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.util.Base64;
 
-
 @Service
 public class SignServiceImpl implements SignService {
-    private final BundleProvider bundleProvider;
-
-    @Autowired
-    public SignServiceImpl(BundleProvider bundleProvider) {
-        this.bundleProvider = bundleProvider;
-    }
 
     @Override
-    public String signXml(String xmlString) {
-        final var _signBundle = bundleProvider.getSignBundle();
+    public String signXml(String xmlString, BundleProvider.BundleBySignAlg signBundle) {
         try {
             Document doc = DocumentMapper.getDocument(xmlString);
-            XMLSignature sig = new XMLSignature(doc, "", _signBundle.getSignMethodURI());
+            XMLSignature sig = new XMLSignature(doc, "", signBundle.getSignMethodURI());
             if (doc.getFirstChild() != null) {
                 doc.getFirstChild().appendChild(sig.getElement());
                 Transforms transforms = new Transforms(doc);
                 transforms.addTransform(Transforms.TRANSFORM_ENVELOPED_SIGNATURE);
                 transforms.addTransform(XMLCipherParameters.N14C_XML_CMMNTS);
                 sig.addDocument("", transforms, SecretStorage.Gost2015_512.DIGEST_METHOD_URI);
-                sig.addKeyInfo(_signBundle.getMy_x509Cert());
-                sig.sign(_signBundle.getMyPrivateKey());
+                sig.addKeyInfo(signBundle.getMy_x509Cert());
+                sig.sign(signBundle.getMyPrivateKey());
 
                 return DocumentMapper.getString(doc);
             } else {
@@ -58,8 +49,7 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public String signSoap(String xmlString) {
-        final var _signBundle = bundleProvider.getSignBundle();
+    public String signSoap(String xmlString, BundleProvider.BundleBySignAlg signBundle) {
         try {
             Document doc = DocumentMapper.getDocument(xmlString);
 
@@ -101,15 +91,15 @@ public class SignServiceImpl implements SignService {
             soapsec.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
             Transforms transforms = new Transforms(soapDoc);
             transforms.addTransform(Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS);
-            XMLSignature sig = new XMLSignature(soapDoc, "#bodyId", _signBundle.getSignMethodURI(), Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS);
+            XMLSignature sig = new XMLSignature(soapDoc, "#bodyId", signBundle.getSignMethodURI(), Transforms.TRANSFORM_C14N_EXCL_OMIT_COMMENTS);
             transforms.item(0).getElement().appendChild(new InclusiveNamespaces(soapDoc, "").getElement());
 
             soapsec.appendChild(sig.getElement());
             headerElement.appendChild(soapsec);
-            sig.addDocument("#bodyId", transforms, _signBundle.getDigestMethodURI());
-            sig.sign(_signBundle.getMyPrivateKey());
+            sig.addDocument("#bodyId", transforms, signBundle.getDigestMethodURI());
+            sig.sign(signBundle.getMyPrivateKey());
 
-            byte[] certByte = _signBundle.getMy_x509Cert().getEncoded();
+            byte[] certByte = signBundle.getMy_x509Cert().getEncoded();
             NodeList nodesSig = soapDoc.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#","Signature");
             Element soapSig = (Element)nodesSig.item(0);
             Element soapKeyInfo = soapDoc.createElementNS("", "ds:KeyInfo");

@@ -6,35 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "vshep_data")
+@Table(name = "certificate_data")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VshepData {
+public class CertificateData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long certId;
+    @Column(nullable = false)
+    private String issuedBy;
 
     @Column(nullable = false)
-    private String clientId;
+    private String issuedAt;
 
     @Column(nullable = false)
-    private String serviceId;
+    private String expiresAt;
 
     @Column(nullable = false)
-    private String senderId;
+    private String certpwd;
 
-    @Column(nullable = false)
-    private String senderPwd;
-
-    @Column(nullable = false)
-    private String source;
-
-    @Column
-    private String URL;
-
-    @Column
-    private String testUrl;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    private String cert;
 }

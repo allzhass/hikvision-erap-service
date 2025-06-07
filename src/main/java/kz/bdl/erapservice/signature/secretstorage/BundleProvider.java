@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -17,6 +16,8 @@ import java.security.cert.*;
 import java.security.cert.Certificate;
 import java.util.Base64;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
@@ -44,7 +45,7 @@ public final class BundleProvider {
     }
 
     private final SecretStorage secretStorage;
-    private final BundleBySignAlg gost2015Bundle = new BundleBySignAlg(SecretStorage.Gost2015_512.SIG_ALG_NAME, SecretStorage.Gost2015_512.SIGN_METHOD_URI, SecretStorage.Gost2015_512.DIGEST_METHOD_URI);
+    private final Map<Long, BundleBySignAlg> bundleMap = new ConcurrentHashMap<>();
 
     @Autowired
     public BundleProvider(@Qualifier("simpleJsonSecretStorage") SecretStorage secretStorage) throws Exception {
@@ -52,11 +53,32 @@ public final class BundleProvider {
         initializeOrUpdateBundleCache();
     }
 
-    @Scheduled(initialDelay = BUNDLE_CACHE_REFRESH_PERIOD, fixedDelay = BUNDLE_CACHE_REFRESH_PERIOD)
+    public void initBundleCustom(Long certId, String p12InBase64, String p12Password) throws Exception {
+        BundleBySignAlg bundle = new BundleBySignAlg(
+            SecretStorage.Gost2015_512.SIG_ALG_NAME,
+            SecretStorage.Gost2015_512.SIGN_METHOD_URI,
+            SecretStorage.Gost2015_512.DIGEST_METHOD_URI
+        );
+        log.info("Cerficate bundle: id={}; pwd={}; cert={}", certId, p12Password, p12InBase64);
+
+        buildAndAssignOwnX509CertAndPrivateKey_in_P12(bundle, p12InBase64, p12Password);
+        bundle.myP12_in_Base64 = p12InBase64;
+        bundle.myP12_pwd = p12Password;
+        bundleMap.put(certId, bundle);
+    }
+
+//    @Scheduled(initialDelay = BUNDLE_CACHE_REFRESH_PERIOD, fixedDelay = BUNDLE_CACHE_REFRESH_PERIOD)
     public void initializeOrUpdateBundleCache() throws Exception {
         secretStorage.initOrResetSigAlgModelMap();
         final var gost2015_512Model = secretStorage.getSecretStorageModelBySigAlgName(SecretStorage.Gost2015_512.SIG_ALG_NAME);
-        initBundleFor(gost2015_512Model, gost2015Bundle); // bundle for gost2015 alg will be added to vault at end of 2022
+        BundleBySignAlg bundle = new BundleBySignAlg(
+            SecretStorage.Gost2015_512.SIG_ALG_NAME,
+            SecretStorage.Gost2015_512.SIGN_METHOD_URI,
+            SecretStorage.Gost2015_512.DIGEST_METHOD_URI
+        );
+        initBundleFor(gost2015_512Model, bundle);
+        // Store with a default ID of 0 for backward compatibility
+        bundleMap.put(0L, bundle);
     }
 
     private void initBundleFor(SecretStorage.Model model, BundleBySignAlg bundle) throws Exception {
@@ -93,8 +115,20 @@ public final class BundleProvider {
         log.info("build_and_assign_own_x_509_cert_and_private_key_in_p_12 successfully done");
     }
 
+    public BundleBySignAlg getSignBundle(Long certId) {
+        BundleBySignAlg bundle = bundleMap.get(certId);
+        if (bundle == null) {
+            // Fallback to default bundle for backward compatibility
+            bundle = bundleMap.get(0L);
+            if (bundle == null) {
+                throw new IllegalStateException("No certificate bundle found for ID: " + certId);
+            }
+        }
+        return bundle;
+    }
+
     public BundleBySignAlg getSignBundle() {
-        return gost2015Bundle;
+        return getSignBundle(0L);
     }
 
     @Getter

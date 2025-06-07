@@ -29,6 +29,10 @@ spring:
             readTimeout: ${FEIGN_CLIENT_READ_TIMEOUT:90000}
             loggerLevel: ${FEIGN_CLIENT_LOGLEVEL:full}
 
+certificate:
+  refresh:
+    interval: ${CERTIFICATE_REFRESH_INTERVAL:10800000} # 3 hours in milliseconds
+
 logging:
   file:
     name: /app/logs/erap-service.log
