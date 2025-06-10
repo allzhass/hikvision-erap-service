@@ -36,10 +36,10 @@ public class ViolationServiceImpl implements ViolationService {
         log.info("Check Violation: MessageId={}; PlateNumber={}", sentViolations.getMessageId(), sentViolations.getPlateNumber());
 
         Violation violation;
-        if (Constants.BRAND_OPER.equals(camera.getBrand())) {
-            violation = bdlService.getViolationByOperCode(violationCode);
-        } else if (Constants.BRAND_HIK.equals(camera.getBrand())) {
+        if (Constants.BRAND_MERGEN.equals(camera.getBrand()) || Constants.BRAND_HIK.equals(camera.getBrand())) {
             violation = bdlService.getViolationByHikCode(violationCode);
+        } else if (Constants.BRAND_OPER.equals(camera.getBrand())) {
+            violation = bdlService.getViolationByOperCode(violationCode);
         } else {
             throw new ResourceBadRequestException(String.format(
                     "Unknown camera brand: id: %s; code: %s; brand: %s",
