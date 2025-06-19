@@ -18,7 +18,7 @@ public class SentViolations {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "camera_violation_id", nullable = false)
+    @JoinColumn(name = "camera_violation_id")
     private CameraViolation cameraViolation;
 
     @Lob

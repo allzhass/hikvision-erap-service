@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -41,7 +42,7 @@ public class ViolationServiceImpl implements ViolationService {
         } else if (Constants.BRAND_OPER.equals(camera.getBrand())) {
             violation = bdlService.getViolationByOperCode(violationCode);
         } else {
-            throw new ResourceBadRequestException(String.format(
+            throw new ResourceSuccessException(String.format(
                     "Unknown camera brand: id: %s; code: %s; brand: %s",
                     camera.getId(),
                     camera.getCode(),
@@ -50,7 +51,7 @@ public class ViolationServiceImpl implements ViolationService {
 
         CameraViolation cameraViolation = bdlService.getCameraViolationByCameraAndViolation(camera, violation);
         if (cameraViolation == null || !cameraViolation.getIsSendErap()) {
-            throw new ResourceBadRequestException(String.format(
+            throw new ResourceSuccessException(String.format(
                     "Camera is not configured to send this violation: camera: %s; violation: %s",
                     camera.getCode(),
                     violation.getCode()));
@@ -73,6 +74,7 @@ public class ViolationServiceImpl implements ViolationService {
                         sentViolationsList.get(0).getMessageId()));
             }
         }
+
         return cameraViolation;
     }
 

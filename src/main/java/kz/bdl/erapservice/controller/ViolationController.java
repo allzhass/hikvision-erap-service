@@ -17,9 +17,11 @@ import kz.bdl.erapservice.entity.CameraViolation;
 import kz.bdl.erapservice.entity.SentViolations;
 import kz.bdl.erapservice.exception.ResourceBadRequestException;
 import kz.bdl.erapservice.exception.ResourceInternalException;
+import kz.bdl.erapservice.exception.ResourceSuccessException;
 import kz.bdl.erapservice.external.FileDownloadWebClient;
 import kz.bdl.erapservice.mapper.ViolationMapper;
 import kz.bdl.erapservice.mapper.VshepMapper;
+import kz.bdl.erapservice.service.AutoService;
 import kz.bdl.erapservice.service.BDLService;
 import kz.bdl.erapservice.service.ViolationService;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.List;
@@ -45,6 +48,7 @@ import java.util.stream.Collectors;
 public class ViolationController {
     private BDLService bdlService;
     private ViolationService violationService;
+    private AutoService autoService;
     private FileDownloadWebClient fileDownloadWebClient;
 
     @PostMapping
@@ -148,22 +152,36 @@ public class ViolationController {
             }
 
             ErapViolation erapViolation = envelope.getBody().getSendMessage().getRequest().getRequestData().getData().getOnEventShep().getViolation();
+            sentViolations.setMessageId(erapViolation.getMessageId());
+            sentViolations.setPlateNumber(erapViolation.getPlateNumber());
+
             APK apk = bdlService.getApkByDeviceNumber(erapViolation.getDeviceNumber());
             if (apk == null) {
-                throw new ResourceBadRequestException(String.format(
+                throw new ResourceSuccessException(String.format(
                         "Unknown APK: number: %s", erapViolation.getDeviceNumber()));
             }
 
             List<Camera> cameras = bdlService.getCamerasByApk(apk);
             Camera camera = getCamera(cameras, erapViolation);
-
-            sentViolations.setMessageId(erapViolation.getMessageId());
-            sentViolations.setPlateNumber(erapViolation.getPlateNumber());
             violationService.checkViolation(camera, erapViolation.getViolationCode(), sentViolations);
-
             erapViolation.enrich(apk);
-            String resultString = violationService.sendViolation(erapViolation, sentViolations);
 
+            LocalDateTime givenTime = LocalDateTime.parse(erapViolation.getSendAt());
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime threshold = now.minusHours(3);
+            if (givenTime.isBefore(threshold)) {
+                String errMsg = String.format("This violation received too later: PlateNumber=%s; SendAt:%s", erapViolation.getPlateNumber(), erapViolation.getSendAt());
+                log.error(errMsg);
+                throw new ResourceSuccessException(errMsg);
+            }
+
+            if (!autoService.isSendAutoViolation(erapViolation.getPlateNumber())) {
+                String errMsg = String.format("Violations of this auto cannot be send to ERAP: %s", erapViolation.getPlateNumber());
+                log.error(errMsg);
+                throw new ResourceSuccessException(errMsg);
+            }
+
+            String resultString = violationService.sendViolation(erapViolation, sentViolations);
             kz.bdl.erapservice.dto.vshep.response.Envelope envelopeResponse;
             try {
                 envelopeResponse = VshepMapper.toEnvelope(resultString);
@@ -183,14 +201,40 @@ public class ViolationController {
             } catch (NullPointerException e) {
                 throw new ResourceInternalException(String.format("Internal error: %s", resultString));
             }
+        } catch (ResourceSuccessException e) {
+            sentViolations.setResponse(e.getMessage());
+            sentViolations.setIsError(true);
+            log.error("ResourceSuccessException: MessageId={}; PlateNumber={}; Error={}",
+                    sentViolations.getMessageId(), sentViolations.getPlateNumber(), e.getMessage());
+
+            String resultString = new StringBuilder()
+                    .append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>")
+                    .append("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">")
+                    .append("<soap:Header><wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soap:mustUnderstand=\"1\">")
+                    .append("<ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/>")
+                    .append("<ds:SignatureMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34102015-gostr34112015-512\"/>")
+                    .append("<ds:Reference URI=\"#id-840054569913B6928ABABE8050099EF5DAAB0330\"><ds:Transforms><ds:Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/>")
+                    .append("</ds:Transforms><ds:DigestMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34112015-512\"/>")
+                    .append("<ds:DigestValue>zziEHtMsYUCTqohaBxG51DCcOsUquE+T1sczt9XAg23W+6MCkcOqZhf5YkmDsuC7UqPQiUTr7ZRpZ/xAZDCZMw==</ds:DigestValue></ds:Reference></ds:SignedInfo>")
+                    .append("<ds:SignatureValue>j7AjFaw7CBtW+w2eVks/nuO/eH2T7hY4HUKvSoWPk//i3pbHZh6WFvPKwLirM9g9YuKQobBoX1+h0eAZEkW0eZBFQ5B+tQKsn2CcM+fbhA2lS2bJT9gjN2DJ0dNruExx9eUiWePDlKx5VbDgDE30gZu7MkdM8kpuZg8efLJS9Zc=</ds:SignatureValue>")
+                    .append("<ds:KeyInfo><wsse:SecurityTokenReference><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>C=KZ,CN=ҰЛТТЫҚ КУӘЛАНДЫРУШЫ ОРТАЛЫҚ (GOST) 2022</ds:X509IssuerName>")
+                    .append("<ds:X509SerialNumber>431184608699948652601025965397585293475933839593</ds:X509SerialNumber></ds:X509IssuerSerial></ds:X509Data></wsse:SecurityTokenReference>")
+                    .append("</ds:KeyInfo></ds:Signature></wsse:Security></soap:Header>")
+                    .append("<soap:Body xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"id-840054569913B6928ABABE8050099EF5DAAB0330\">")
+                    .append("<SendMessageResponse xmlns=\"http://bip.bee.kz/SyncChannel/v10/Types\"><response xmlns=\"\"><responseInfo><messageId>3f2a4411-8295-448b-b2ce-92d610a85bd5</messageId>")
+                    .append("<responseDate>2025-06-11T19:02:22.0104583+05:00</responseDate><status><code>SCSS001</code><message>Message has been processed successfully</message>")
+                    .append("</status></responseInfo><responseData><data/></responseData></response></SendMessageResponse></soap:Body></soap:Envelope>")
+                    .toString();
+            return ResponseEntity.ok(resultString);
+
         } catch (RuntimeException e) {
             sentViolations.setResponse(e.getMessage());
             sentViolations.setIsError(true);
-
             log.error("RuntimeException: MessageId={}; PlateNumber={}; Error={}",
                     sentViolations.getMessageId(), sentViolations.getPlateNumber(), e.getMessage());
             e.printStackTrace();
             return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(e.getMessage());
+
         } finally {
             sentViolations.setCreatedAt(LocalDateTime.now());
             log.info("Saving request: MessageId={}; PateNumber={}; IsError={}; CameraViolation={}",
