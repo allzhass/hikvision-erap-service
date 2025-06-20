@@ -37,6 +37,8 @@ import java.io.StringReader;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -236,7 +238,8 @@ public class ViolationController {
             return ResponseEntity.internalServerError().contentType(MediaType.TEXT_PLAIN).body(e.getMessage());
 
         } finally {
-            sentViolations.setCreatedAt(LocalDateTime.now());
+            ZonedDateTime gmtZonedDateTime = ZonedDateTime.now(ZoneId.of("GMT"));
+            sentViolations.setCreatedAt(gmtZonedDateTime.toLocalDateTime());
             log.info("Saving request: MessageId={}; PateNumber={}; IsError={}; CameraViolation={}",
                     sentViolations.getMessageId(),
                     sentViolations.getPlateNumber(),
