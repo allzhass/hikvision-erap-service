@@ -197,6 +197,8 @@ public class ViolationController {
                         envelopeResponse.getBody().getSendMessageResponse().getResponse().getResponseInfo().getStatus().getCode())) {
                     sentViolations.setIsError(false);
                     return ResponseEntity.ok(resultString);
+                } else if (resultString.contains("duplicate key value violates unique constraint \"message_client_guid_message_id_key\"")) {
+                    throw new ResourceSuccessException(String.format("ResourceSuccessException: %s", resultString));
                 } else {
                     throw new ResourceInternalException(String.format("Internal error: %s", resultString));
                 }
@@ -209,24 +211,7 @@ public class ViolationController {
             log.error("ResourceSuccessException: MessageId={}; PlateNumber={}; Error={}",
                     sentViolations.getMessageId(), sentViolations.getPlateNumber(), e.getMessage());
 
-            String resultString = new StringBuilder()
-                    .append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>")
-                    .append("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">")
-                    .append("<soap:Header><wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soap:mustUnderstand=\"1\">")
-                    .append("<ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/>")
-                    .append("<ds:SignatureMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34102015-gostr34112015-512\"/>")
-                    .append("<ds:Reference URI=\"#id-840054569913B6928ABABE8050099EF5DAAB0330\"><ds:Transforms><ds:Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/>")
-                    .append("</ds:Transforms><ds:DigestMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34112015-512\"/>")
-                    .append("<ds:DigestValue>zziEHtMsYUCTqohaBxG51DCcOsUquE+T1sczt9XAg23W+6MCkcOqZhf5YkmDsuC7UqPQiUTr7ZRpZ/xAZDCZMw==</ds:DigestValue></ds:Reference></ds:SignedInfo>")
-                    .append("<ds:SignatureValue>j7AjFaw7CBtW+w2eVks/nuO/eH2T7hY4HUKvSoWPk//i3pbHZh6WFvPKwLirM9g9YuKQobBoX1+h0eAZEkW0eZBFQ5B+tQKsn2CcM+fbhA2lS2bJT9gjN2DJ0dNruExx9eUiWePDlKx5VbDgDE30gZu7MkdM8kpuZg8efLJS9Zc=</ds:SignatureValue>")
-                    .append("<ds:KeyInfo><wsse:SecurityTokenReference><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>C=KZ,CN=ҰЛТТЫҚ КУӘЛАНДЫРУШЫ ОРТАЛЫҚ (GOST) 2022</ds:X509IssuerName>")
-                    .append("<ds:X509SerialNumber>431184608699948652601025965397585293475933839593</ds:X509SerialNumber></ds:X509IssuerSerial></ds:X509Data></wsse:SecurityTokenReference>")
-                    .append("</ds:KeyInfo></ds:Signature></wsse:Security></soap:Header>")
-                    .append("<soap:Body xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"id-840054569913B6928ABABE8050099EF5DAAB0330\">")
-                    .append("<SendMessageResponse xmlns=\"http://bip.bee.kz/SyncChannel/v10/Types\"><response xmlns=\"\"><responseInfo><messageId>3f2a4411-8295-448b-b2ce-92d610a85bd5</messageId>")
-                    .append("<responseDate>2025-06-11T19:02:22.0104583+05:00</responseDate><status><code>SCSS001</code><message>Message has been processed successfully</message>")
-                    .append("</status></responseInfo><responseData><data/></responseData></response></SendMessageResponse></soap:Body></soap:Envelope>")
-                    .toString();
+            String resultString = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Header><wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" soap:mustUnderstand=\"1\"><ds:Signature xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"></ds:CanonicalizationMethod><ds:SignatureMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34102015-gostr34112015-512\"></ds:SignatureMethod><ds:Reference URI=\"#id-1cd6f524-401c-4366-abd5-e29dde58ec38\"><ds:Transforms><ds:Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"></ds:Transform></ds:Transforms><ds:DigestMethod Algorithm=\"urn:ietf:params:xml:ns:pkigovkz:xmlsec:algorithms:gostr34112015-512\"></ds:DigestMethod><ds:DigestValue>uHAPf6GAaHMHhu6BPiPBkqhve1dylFB7p4hDzgJMOKHLczVvmJwfiapOQIBnbJhxfGtZMr3oFK8kj38vjifaAA==</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>9y4anHAqKp7gRxl5UrhmHHJ4M8XbaSTDEWvWiS1O8M5enlk+R29SpQvb70MauuFFuY5OdxaTwoF1+VUMDagcg16rGKCU6u7F1uodP7zKQc3cK02KTaIHwTq+FIiy7UPiB8xqEkpnesGz8SJcRRmsc02Q/WcuZA0JaLIoaLafR20=</ds:SignatureValue><ds:KeyInfo><wsse:SecurityTokenReference><ds:X509Data><ds:X509IssuerSerial><ds:X509IssuerName>C=KZ,CN=ҰЛТТЫҚ КУӘЛАНДЫРУШЫ ОРТАЛЫҚ (GOST) 2022</ds:X509IssuerName><ds:X509SerialNumber>431184608699948652601025965397585293475933839593</ds:X509SerialNumber></ds:X509IssuerSerial></ds:X509Data></wsse:SecurityTokenReference></ds:KeyInfo></ds:Signature></wsse:Security></soap:Header><soap:Body xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" wsu:Id=\"id-1cd6f524-401c-4366-abd5-e29dde58ec38\"><ns2:SendMessageResponse xmlns:ns2=\"http://bip.bee.kz/SyncChannel/v10/Types\"><response><responseInfo><messageId>9d1c938b-f840-4cf7-8b56-1e1be4a9f7b7</messageId><responseDate>2025-06-23T12:40:34.477+05:00</responseDate><status><code>SCSS001</code><message>Message has been processed successfully</message></status></responseInfo><responseData><data><return>true</return></data></responseData></response></ns2:SendMessageResponse></soap:Body></soap:Envelope>";
             return ResponseEntity.ok(resultString);
 
         } catch (RuntimeException e) {
@@ -240,11 +225,7 @@ public class ViolationController {
         } finally {
             ZonedDateTime gmtZonedDateTime = ZonedDateTime.now(ZoneId.of("GMT"));
             sentViolations.setCreatedAt(gmtZonedDateTime.toLocalDateTime());
-            log.info("Saving request: MessageId={}; PateNumber={}; IsError={}; CameraViolation={}",
-                    sentViolations.getMessageId(),
-                    sentViolations.getPlateNumber(),
-                    sentViolations.getIsError(),
-                    sentViolations.getCameraViolation());
+            log.info("Saving request: SentViolations={}", sentViolations);
             bdlService.updateSentViolation(sentViolations);
         }
     }

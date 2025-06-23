@@ -1,5 +1,6 @@
 package kz.bdl.erapservice.repository;
 
+import kz.bdl.erapservice.entity.Auto;
 import kz.bdl.erapservice.entity.SentViolations;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface SentViolationsRepository extends JpaRepository<SentViolations, Long> {
+
+    List<SentViolations> findByMessageId(String messageId);
 
     @Query("SELECT s FROM SentViolations s WHERE s.cameraViolation.camera.apk.deviceNumber = :deviceNumber " +
             "AND s.plateNumber = :plateNumber AND s.messageId = :messageId")

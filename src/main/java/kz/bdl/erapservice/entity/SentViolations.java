@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sent_violations")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class SentViolations {
     @Id
@@ -33,4 +32,29 @@ public class SentViolations {
     private LocalDateTime createdAt;
     private String plateNumber;
     private String messageId;
+
+    public SentViolations() {
+        this.request = "";
+        this.response = "";
+    }
+
+    public void setRequest(String request) {
+        this.request = new StringBuilder().append(this.request).append("\n-------------------\n").append(request).toString();
+    }
+
+    public void setResponse(String response) {
+        this.response = new StringBuilder().append(this.response).append("\n-------------------\n").append(response).toString();
+    }
+
+    @Override
+    public String toString() {
+        return "SentViolations{" +
+                "id=" + id +
+                ", cameraViolation=" + cameraViolation +
+                ", isError=" + isError +
+                ", createdAt=" + createdAt +
+                ", plateNumber='" + plateNumber + '\'' +
+                ", messageId='" + messageId + '\'' +
+                '}';
+    }
 }

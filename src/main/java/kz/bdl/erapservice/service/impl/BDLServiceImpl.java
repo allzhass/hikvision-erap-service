@@ -88,6 +88,12 @@ public class BDLServiceImpl implements BDLService {
 
     @Override
     @Transactional
+    public List<SentViolations> getSentViolationsByMessageId(String messageId) {
+        return sentViolationsRepository.findByMessageId(messageId);
+    }
+
+    @Override
+    @Transactional
     public ResponseEntity<String> updateSentViolation(SentViolations sentViolations) {
         sentViolationsRepository.save(sentViolations);
         return ResponseEntity.ok("Sent Violation updated successfully");

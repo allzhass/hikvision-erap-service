@@ -14,5 +14,7 @@ public interface BDLService {
     CameraViolation getCameraViolationByCameraAndViolation(Camera camera, Violation violation);
     List<SentViolations> getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
             String deviceNumber, String plateNumber, String messageId);
+    List<SentViolations> getSentViolationsByMessageId(String messageId);
+
     ResponseEntity<String> updateSentViolation(SentViolations sentViolations);
 }

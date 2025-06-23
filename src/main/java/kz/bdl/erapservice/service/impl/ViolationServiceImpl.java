@@ -58,14 +58,12 @@ public class ViolationServiceImpl implements ViolationService {
         }
 
         sentViolations.setCameraViolation(cameraViolation);
-        List<SentViolations> sentViolationsList = bdlService.getSentViolationsByDeviceNumberAndPlateNumberAndMessageId(
-                sentViolations.getCameraViolation().getCamera().getApk().getDeviceNumber(),
-                sentViolations.getPlateNumber(),
-                sentViolations.getMessageId()
-        );
+        List<SentViolations> sentViolationsList = bdlService.getSentViolationsByMessageId(sentViolations.getMessageId());
         if (sentViolationsList.size() > 0) {
             if (sentViolationsList.get(0).getIsError()) {
                 sentViolations.setId(sentViolationsList.get(0).getId());
+                sentViolations.setRequest(sentViolationsList.get(0).getRequest());
+                sentViolations.setResponse(sentViolationsList.get(0).getResponse());
             } else {
                 throw new ResourceSuccessException(String.format(
                         "There is already exist success row: deviceNumber: %s; plateNumber: %s; messageId: %s",
