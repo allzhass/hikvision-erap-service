@@ -34,12 +34,7 @@ public class SentViolations {
     private String messageId;
 
     public SentViolations() {
-        this.request = "";
         this.response = "";
-    }
-
-    public void setRequest(String request) {
-        this.request = new StringBuilder().append(this.request).append("\n-------------------\n").append(request).toString();
     }
 
     public void setResponse(String response) {
