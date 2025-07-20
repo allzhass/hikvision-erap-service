@@ -34,7 +34,7 @@ public class ViolationServiceImpl implements ViolationService {
 
     @Override
     public CameraViolation checkViolation(Camera camera, String violationCode, SentViolations sentViolations) {
-        log.info("Check Violation: MessageId={}; PlateNumber={}", sentViolations.getMessageId(), sentViolations.getPlateNumber());
+        log.info("Check Violation: MessageId={}; ViolationCode={}; PlateNumber={}", sentViolations.getMessageId(), violationCode, sentViolations.getPlateNumber());
 
         Violation violation;
         if (Constants.BRAND_MERGEN.equals(camera.getBrand()) || Constants.BRAND_HIK.equals(camera.getBrand())) {

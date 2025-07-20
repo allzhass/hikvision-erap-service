@@ -154,6 +154,7 @@ public class ViolationController {
             }
 
             ErapViolation erapViolation = envelope.getBody().getSendMessage().getRequest().getRequestData().getData().getOnEventShep().getViolation();
+            log.info("Received violation: {}", erapViolation.toShortString());
             sentViolations.setMessageId(erapViolation.getMessageId());
             sentViolations.setPlateNumber(erapViolation.getPlateNumber());
 

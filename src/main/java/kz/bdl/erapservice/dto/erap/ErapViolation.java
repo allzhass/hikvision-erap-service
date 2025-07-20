@@ -1,17 +1,13 @@
 package kz.bdl.erapservice.dto.erap;
 
-import jakarta.xml.bind.Element;
 import jakarta.xml.bind.annotation.*;
 import kz.bdl.erapservice.dto.FrameData;
 import kz.bdl.erapservice.entity.APK;
-import kz.bdl.erapservice.entity.Camera;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 import static kz.bdl.erapservice.dto.Constants.DATE_TIME_FORMATTER;
 
 @Data
@@ -20,6 +16,11 @@ import static kz.bdl.erapservice.dto.Constants.DATE_TIME_FORMATTER;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "violation")
 public class ErapViolation {
+
+    public String toShortString() {
+        return String.format("MessageId=%s; PlateNumber=%s; ViolationCode=%s; EventTime=%s; Speed=%s; DeltaSpeed=%s; SpeedLimit=%s; RoadLane=%s; LocationId=%s; LocationTitle=%s; DistrictCode=%s; Source=%s; DeviceNumber=%s; CertificateNumber=%s; CertificateIssueDate=%s; CertificateExpireDate=%s", 
+        messageId, plateNumber, violationCode, eventTime, speed, deltaSpeed, speedLimit, roadLane, locationId, locationTitle, districtCode, source, deviceNumber, certificateNumber, certificateIssueDate, certificateExpireDate);
+    }
 
     public void enrich(APK apk) {
         this.serviceId = apk.getLocation().getRegion().getVshepData().getServiceId();
