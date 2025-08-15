@@ -1,7 +1,5 @@
 package kz.bdl.erapservice.repository;
 
-import kz.bdl.erapservice.dto.erap.ErapViolation;
-import kz.bdl.erapservice.entity.Camera;
 import kz.bdl.erapservice.entity.Violation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
