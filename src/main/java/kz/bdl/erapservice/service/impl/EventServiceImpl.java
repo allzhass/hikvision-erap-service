@@ -13,9 +13,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -37,11 +40,29 @@ public class EventServiceImpl implements EventService {
         }
         Camera camera = cameras.get(0);
 
+        String imageUrl = request.getImage();
+        String base64Image = "";
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            try {
+                URL url = new URL(imageUrl);
+                InputStream inputStream = url.openStream();
+                byte[] imageBytes = inputStream.readAllBytes();
+                base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                inputStream.close();
+                log.info("Successfully downloaded and converted image to base64 from URL: {}", imageUrl);
+            } catch (Exception e) {
+                log.error("Failed to download image from URL: {}", imageUrl, e);
+                throw new ResourceBadRequestException("Failed to download image from URL: " + imageUrl);
+            }
+        } else {
+            throw new ResourceBadRequestException("Image URL is empty");
+        }
+
         Event event = new Event();
         event.setExternalId(request.getId());
         event.setCamera(camera);
         event.setPlateNumber(request.getPlateNumber());
-        event.setImage(request.getImage());
+        event.setImage(base64Image);
         event.setCreatedAt(parseDateTime(request.getDate()));
 
         if (request.getViolation() != null) {
