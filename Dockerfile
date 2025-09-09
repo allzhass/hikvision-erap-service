@@ -7,6 +7,6 @@ RUN yum update -y && \
     yum install -y curl telnet && \
     yum clean all
 
-COPY build/libs/erap-service-0.1.1.jar /app/erap-service-0.1.1.jar
+COPY build/libs/erap-service-0.1.2.jar /app/erap-service-0.1.2.jar
 
-ENTRYPOINT ["java", "-jar", "/app/erap-service-0.1.1.jar"]
+ENTRYPOINT ["java", "-jar", "/app/erap-service-0.1.2.jar"]

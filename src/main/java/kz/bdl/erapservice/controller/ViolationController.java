@@ -239,6 +239,13 @@ public class ViolationController {
                 || erapViolation.getLocationTitle().contains(cameraItem.getIp())
                 || erapViolation.getLocationTitle().contains(cameraItem.getName())) {
                 return cameraItem;
+            } else {
+                String[] cameraNames = cameraItem.getName().split(",");
+                for (String cameraName : cameraNames) {
+                    if (erapViolation.getLocationTitle().contains(cameraName)) {
+                        return cameraItem;
+                    }
+                }
             }
         }
         if (cameras.size() > 0) {
