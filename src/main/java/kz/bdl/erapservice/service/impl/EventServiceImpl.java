@@ -64,23 +64,14 @@ public class EventServiceImpl implements EventService {
         event.setPlateNumber(request.getPlateNumber());
         event.setImage(base64Image);
         event.setCreatedAt(parseDateTime(request.getDate()));
+        event.setSpeed(request.getSpeed());
+        event.setSpeedLimit(request.getSpeedLimit());
+        event.setRoadLane(request.getRoadLane());
+        event.setCameraDirection(request.getCameraDirection());
 
-        if (request.getViolation() != null) {
-            HikvisionEventRequest.ViolationData violationData = request.getViolation();
-            
-            if (violationData.getType() != null) {
-                Violation violation = violationRepository.getViolationByHikCode(violationData.getType());
-                event.setViolation(violation);
-            }
-            
-            if (violationData.getSpeed() != null || violationData.getType() != null) {
-                String violationDetails = String.format(
-                    "{\"type\":\"%s\",\"speed\":%s}",
-                    violationData.getType() != null ? violationData.getType() : "",
-                    violationData.getSpeed() != null ? violationData.getSpeed() : ""
-                );
-                event.setViolationDetails(violationDetails);
-            }
+        if (request.getViolationType() != null) {
+            Violation violation = violationRepository.getViolationByHikCode(request.getViolationType());
+            event.setViolation(violation);
         }
 
         Event savedEvent = eventRepository.save(event);

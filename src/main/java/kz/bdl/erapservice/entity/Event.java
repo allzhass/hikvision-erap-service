@@ -28,11 +28,20 @@ public class Event {
     @JoinColumn(name = "violation_id")
     private Violation violation;
 
-    @Column(name = "violation_details")
-    private String violationDetails;
-
     @Column(name = "plate_number")
     private String plateNumber;
+
+    @Column(name = "speed")
+    private Integer speed;
+
+    @Column(name = "speed_limit")
+    private Integer speedLimit;
+
+    @Column(name = "road_lane")
+    private Integer roadLane;
+
+    @Column(name = "camera_direction")
+    private Integer cameraDirection;
 
     @Column(columnDefinition = "TEXT")
     private String image;

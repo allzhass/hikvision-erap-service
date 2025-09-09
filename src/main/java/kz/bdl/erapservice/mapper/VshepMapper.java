@@ -49,8 +49,8 @@ public class VshepMapper {
             // <sender>
             Element sender = doc.createElement("sender");
             requestInfo.appendChild(sender);
-            sender.appendChild(createElementWithText(doc, "senderId", "mergenzhetysu"));
-            sender.appendChild(createElementWithText(doc, "password", "RBOyXc6c"));
+            sender.appendChild(createElementWithText(doc, "senderId", "mergenvko"));
+            sender.appendChild(createElementWithText(doc, "password", "2plnNjfX"));
 
             // <requestData>
             Element requestData = doc.createElement("requestData");

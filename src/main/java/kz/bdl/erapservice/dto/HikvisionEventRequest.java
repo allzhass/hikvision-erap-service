@@ -13,13 +13,9 @@ public class HikvisionEventRequest {
     private String plateNumber;
     private String image;
     private String date;
-    private ViolationData violation;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ViolationData {
-        private String type;
-        private Integer speed;
-    }
+    private Integer speed;
+    private Integer speedLimit;
+    private Integer roadLane;
+    private Integer cameraDirection;
+    private String violationType;
 }
